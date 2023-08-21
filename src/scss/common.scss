@@ -1,0 +1,107 @@
+// Заголовки, загальні БЕМ блоки та інше...
+//========================================================================================================================================================
+%animate {
+   transform: translate(0, 50px);
+   opacity: 0;
+   transition: all 0.5s ease 0s;
+   .previous-section & {
+      transform: translate(0, -50px);
+      opacity: 0;
+   }
+   .active-section & {
+      transform: translate(0, 0);
+      opacity: 1;
+      transition: all 0.8s ease 0s;
+   }
+}
+%animateTwo {
+   transform: translate(0, 50px);
+   opacity: 0;
+   transition: all 0.5s ease 0s;
+   .previous-section & {
+      transform: translate(0, -50px);
+      opacity: 0;
+   }
+   .active-section & {
+      transform: translate(0, 0);
+      opacity: 1;
+      @for $var from 1 to 50 {
+         $delay: $var * 0.1;
+         &:nth-child(#{$var}) {
+            @if $var == 1 {
+               transition: all 0.8s ease 0s;
+            } @else {
+               transition: all 0.8s ease #{$delay + s};
+            }
+         }
+      }
+   }
+}
+//Page========================================================================================================================================================
+.page {
+   counter-reset: item;
+}
+//Section========================================================================================================================================================
+.section {
+   &::after {
+      counter-increment: item;
+      content: counter(item, decimal-leading-zero);
+      position: absolute;
+      top: 50%;
+      @include adaptiveValue("right", 120, 7.5);
+      transform: translate(50%, -50%);
+      color: $whiteColorTwo;
+      @include adaptiveValue("font-size", 60, 26);
+      font-weight: 700;
+      line-height: math.div(75, 60);
+      @media (max-width: $mobileSmall){
+         display: none;
+      }
+   }
+}
+//Block-Text========================================================================================================================================================
+.block-text {
+   max-width: rem(531);
+   &>*:not(:last-child) {
+      @include adaptiveValue("margin-bottom", 132, 15);
+   }
+   @media (max-width: $mobile){
+      max-width: none;
+   }
+   // .block-text__body
+   &__body {
+      &>*:not(:last-child) {
+         @include adaptiveValue("margin-bottom", 32, 5);
+      }
+      &>* {
+         @extend %animateTwo;
+      }
+   }
+   // .block-text__sup-title
+   &__sup-title {
+      @include adaptiveValue("font-size", 25, 18);
+      transform: translate(0, 80px);
+   }
+   // .block-text__title
+   &__title {
+      @include adaptiveValue("font-size", 60, 30, 0, $containerWidth, 479.98);
+      font-weight: 700;
+      line-height: math.div(75, 60);
+      color: $mainColorTwo;
+   }
+   // .block-text__text
+   &__text {
+      @include adaptiveValue("font-size", 25, 16);
+      @extend %animate;
+      .active-section & {
+         transition: all 0.8s ease 0.3s;
+      }
+   }
+}
+//========================================================================================================================================================
+
+//========================================================================================================================================================
+
+//========================================================================================================================================================
+
+//========================================================================================================================================================

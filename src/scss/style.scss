@@ -1,0 +1,1082 @@
+@use "sass:math";
+
+// Підключення міксинів ===========================================================================================================================================================================================================================================================================
+@import "base/mixins";
+
+// Підключення шрифтів ===========================================================================================================================================================================================================================================================================
+//&display=swap - додати при підключенні через плагін
+@import url('https://fonts.googleapis.com/css?family=Quicksand:regular,700&display=swap');
+
+// Підключити, якщо є локальні файли шрифтів
+//@import "fonts/fonts";
+
+// Підключення іконкових шрифтів ==============================================================================================================================================================================================================================================================================
+// Підключити, якщо є файл іконкового шрифту
+//@import "fonts/icons";
+
+// ============================================================================================================================================================================================================================================================================================================================================================================================
+// Налаштування шаблону ============================================================================================================================================================================================================================================================================================================================================================================================
+// ============================================================================================================================================================================================================================================================================================================================================================================================
+
+// За замовчуванням шрифт ==============================================================================================================================================================================================================================================================================
+$fontFamily: "Quicksand";
+$fontSize: rem(25); // де 14(px) - розмір шрифту за замовчуванням з макету
+
+// Основні кольори
+$mainColor: #6A6E77; // Колір шрифту за замовчуванням
+$mainColorTwo: #1C1F25;
+$whiteColor: #fff;
+$whiteColorTwo: #E3E6EC;
+
+// Палітра кольорів
+// @import "base/colors-palette";
+
+// Налаштування адаптивної сітки ===============================================================================================================================================================================================================================================================================================
+
+// Мінімальна ширина сторінки
+$minWidth: 320;
+// Ширина полотна (макету)
+$maxWidth: 1920;
+// Ширина обмежуючого контейнера (0 = немає обмеження)
+$maxWidthContainer: 0;
+// Загальний відступ у контейнера
+// (30 = по 15px ліворуч і праворуч, 0 = немає відступу)
+$containerPadding: 480;
+
+// Ширина спрацьовування першого брейкпоінту
+$containerWidth: $maxWidthContainer + $containerPadding;
+
+// Брейк-поїнти
+$pc: em($containerWidth); // ПК, ноутбуки, деякі планшети у горизонтальному положенні
+$tablet: em(991.98); // Планшети, деякі телефони в горизонтальному положенні
+$mobile: em(767.98); // Телефони L
+$mobileSmall: em(479.98); // Телефони S
+
+// Тип адаптива:
+// 1 = чуйність (у контейнера немає брейкпоінтів),
+// 2 = по брейк-поїнт (контейнер змінює свою ширину по брейк-поїнт)
+$responsiveType: 1;
+
+// ============================================================================================================================================================================================================================================================================================================================================================================================
+// ============================================================================================================================================================================================================================================================================================================================================================================================
+
+// Обнулення ============================================================================================================================================================================================== =============================================================================================== ===============================================================================================
+@import "base/null";
+
+// Стилі тега BODY ============================================================================================================================================================================================================================================================================================================================================================================================
+body {
+	line-height: math.div(45, 25);
+	// Скролл заблоковано
+	.lock & {
+		overflow: hidden;
+		touch-action: none;
+		overscroll-behavior: none;
+	}
+	// Сайт завантажений
+	.loaded & {
+	}
+}
+// Оболонка wrapper ============================================================================================================================================================================================================================================================================================================================================================================================================================================
+.wrapper {
+	min-height: 100%;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	@supports (overflow: clip) {
+		overflow: clip;
+	}
+	// Притискаємо footer
+	> main {
+		flex: 1 1 auto;
+	}
+	// Фікс для слайдерів
+	> * {
+		min-width: 0;
+	}
+}
+// Обмежуючий контейнер ======================================================================================================================================================================================================================
+/*
+(i) Стилі будуть застосовуватись до
+всіх класів, що містять *__container
+Наприклад header__container, main__container і т.п.
+Сніппет (HTML): cnt
+*/
+@if ($responsiveType==1) {
+	// Чуйна
+	[class*="__container"] {
+		min-height: 100%;
+		display: flex;
+		align-items: center;
+		@if ($maxWidthContainer>0) {
+			max-width: rem($containerWidth);
+			margin: 0 auto;
+		}
+		@if ($containerPadding>0) {
+			@if ($maxWidthContainer>0) {
+				padding: 0 rem(math.div($containerPadding, 2));
+			} @else {
+				@include adaptiveValue("padding-left", math.div($containerPadding, 2), 15);
+				@include adaptiveValue("padding-right", math.div($containerPadding, 2), 15);
+			}
+		}
+	}
+} @else {
+	// Брейк-поїнтами
+	[class*="__container"] {
+		margin: 0 auto;
+		@if ($maxWidthContainer>0) {
+			max-width: rem($containerWidth);
+		} @else {
+			@if ($containerPadding>0) {
+				padding: 0 rem(math.div($containerPadding, 2));
+			}
+		}
+		@media (max-width: $pc) {
+			max-width: rem(970);
+		}
+		@media (max-width: $tablet) {
+			max-width: rem(750);
+		}
+		@media (max-width: $mobile) {
+			max-width: none;
+			@if ($containerPadding>0 and $maxWidthContainer>0) {
+				padding: 0 rem(math.div($containerPadding, 2));
+			}
+		}
+	}
+}
+
+// Підключення базових стилів, шаблонів (заготівель) та допоміжних класів
+// Для підключення/вимкнення конкретних стилів дивись base.scss
+@import "base";
+
+// Підключення стилів загальних елементів проекту
+@import "common";
+
+// Підключення стилів окремих блоків
+@import "header";
+@import "footer";
+
+// Підключення стилів окремих сторінок
+@import "home";
+
+//Section-01====================================================================================================
+.section-01 {
+   // .section-01__container
+   &__container {
+      padding-bottom: rem(56);
+      @media (max-width: $mobile){
+         flex-direction: column;
+      }
+   }
+   // .section-01__body
+   &__body {
+      flex-grow: 1;
+      position: relative;
+      @include adaptiveValue("padding-top", 159, 50);
+      @include adaptiveValue("padding-bottom", 159, 50);
+      @include adaptiveValue("padding-left", 240, 15);
+      @include adaptiveValue("padding-right", 240, 15);
+      &::after{
+         content:'';
+         position: absolute;width: 100%;height: 100%;top: 0;left: 0;
+         background-color: rgba(28, 31, 37, 0.60);
+      }
+      @media (max-width: $mobile){
+         @include adaptiveValue("margin-left", -240, -15);
+         @include adaptiveValue("margin-right", -240, -15);
+         display: flex;
+         align-items: center;
+      }
+   }
+   // .section-01__block-text
+   &__block-text {
+      position: relative;
+      z-index: 2;
+   }
+   // .section-01__block-text-body
+   &__block-text-body {
+   }
+   // .section-01__sup-title
+   &__sup-title {
+      color: $whiteColorTwo;
+   }
+   // .section-01__title
+   &__title {
+      color: $whiteColor;
+   }
+   // .section-01__image
+   &__image {
+      position: absolute;width: 100%;height: 100%;top: 0;left: 0;
+      object-fit: cover;
+   }
+}
+//Section-02========================================================================================================================================================
+.section-02 {
+   // .section-02__container
+   &__container {
+      align-items: flex-start;
+      row-gap: rem(15);
+      column-gap: rem(20);
+      padding-bottom: rem(56);
+      @media (max-width: $mobile){
+         flex-direction: column;
+      }
+   }
+   &__content {
+      flex: 0 1 50%;
+      padding-top: rem(50);
+      align-self: center;
+      @media (min-width: $mobile){
+         padding-bottom: rem(50);
+      }
+   }
+   // .section-02__block-text
+   &__block-text {
+   }
+   // .section-02__block-text-body
+   &__block-text-body {
+   }
+   // .section-02__sup-title
+   &__sup-title {
+   }
+   // .section-02__title
+   &__title {
+   }
+   // .section-02__text
+   &__text {
+   }
+   // .section-02__image
+   &__image {
+      flex: 0 1 50%;
+      img {
+         max-width: 100%;
+      }
+   }
+}
+//Section-03========================================================================================================================================================
+.section-03 {
+   // .section-03__container
+   &__container {
+      flex-direction: row-reverse;
+      gap: rem(20);
+      padding-bottom: rem(56);
+      @media (max-width: $mobile){
+         flex-direction: column;
+      }
+   }
+   // .section-03__content
+   &__content {
+      padding-top: rem(50);
+      flex: 0 1 50%;
+      @media (min-width: $mobile){
+         padding-bottom: rem(50);
+      }
+      &>*:not(:last-child) {
+         @include adaptiveValue("margin-bottom", 120, 20);
+      }
+   }
+   // .section-03__block-text
+   &__block-text {
+   }
+   // .section-03__block-text-body
+   &__block-text-body {
+   }
+   // .section-03__sup-title
+   &__sup-title {
+   }
+   // .section-03__title
+   &__title {
+   }
+   // .section-03__statistic
+   &__statistic {
+   }
+   // .section-03__image
+   &__image {
+      align-self: stretch;
+      position: relative;
+      flex: 0 1 50%;
+      img {
+         max-width: 100%;
+      }
+      @media (min-width: $mobile){
+         @include adaptiveValue("left", -240, -15);
+         img {
+            position: absolute;width: 100%;height: 100%;top: 0;left: 0;
+            object-fit: cover;
+         }
+      }
+   }
+}
+.statistic-section-03 {
+   &>*:not(:last-child) {
+      @include adaptiveValue("margin-bottom", 76, 15);
+   }
+   // .statistic-section-03__item
+   &__item {
+      max-width: rem(720);
+      &>*:not(:last-child) {
+         @include adaptiveValue("margin-bottom", 17, 10);
+      }
+   }
+   // .statistic-section-03__content
+   &__content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: rem(15);
+   }
+   // .statistic-section-03__label
+   &__label {
+      @include adaptiveValue("font-size", 25, 18);
+   }
+   // .statistic-section-03__value
+   &__value {
+      @include adaptiveValue("font-size", 25, 18);
+      font-weight: 700;
+      color: $mainColorTwo;
+      &::after{
+         content:'%';
+      }
+   }
+   // .statistic-section-03__stroke
+   &__stroke {
+      height: rem(10);
+      background-color: rgba(28, 31, 37, 0.10);
+   }
+   // .statistic-section-03__lin
+   &__line {
+      height: rem(10);
+      background-color: $mainColorTwo;
+      width: 0%;
+      transition: all 1s ease 0s;
+      .active-section & {
+         width: 54%;
+      }
+      &_big {
+         .active-section & {
+            width: 94%;
+         }
+      }
+   }
+}
+//Section-04========================================================================================================================================================
+.section-04 {
+   // .section-04__container
+   &__container {
+      padding-top: rem(50);
+      padding-bottom: rem(116);
+      justify-content: center;
+      flex-direction: column;
+      &>*:not(:last-child) {
+         @include adaptiveValue("margin-bottom", 153, 20);
+      }
+   }
+   // .section-04__block-text
+   &__block-text {
+      align-self: start;
+      max-width: none;
+   }
+   // .section-04__block-text-body
+   &__block-text-body {
+   }
+   // .section-04__sup-title
+   &__sup-title {
+   }
+   // .section-04__title
+   &__title {
+   }
+   // .section-04__advantages
+   &__advantages {
+   }
+}
+.advantages-section-04 {
+   display: flex;
+   flex-wrap: wrap;
+   row-gap: rem(20);
+   @include adaptiveValue("margin-right", -25.5, -10);
+   @include adaptiveValue("margin-left", -25.5, -10);
+   // .advantages-section-04__item
+   &__item {
+      @include adaptiveValue("padding-left", 25.5, 10);
+      @include adaptiveValue("padding-left", 25.5, 10);
+      display: flex;
+      flex-direction: column;
+      flex: 0 1 33.333%;
+      @extend %animateTwo;
+      &>*:not(:last-child) {
+         @include adaptiveValue("margin-bottom", 26, 10);
+      }
+      @media (max-width: $mobile){
+         flex: 0 1 50%;
+         &:last-child {
+            &:nth-child(odd) {
+               flex: 0 1 100%;
+            }
+         }
+      }
+      @media (max-width: em(550)){
+         flex: 1 1 100%;
+      }
+   }
+   // .advantages-section-04__icon-wrraper
+   &__icon-wrraper {
+      display: flex;
+      gap: rem(20);
+   }
+   // .advantages-section-04__icon
+   &__icon {
+      flex: 0 0 rem(48);
+      width: rem(48);
+      height: rem(48);
+      img {
+         max-width: 100%;
+      }
+   }
+   // .advantages-section-04__icon-text
+   &__icon-text {
+   }
+   // .advantages-section-04__content
+   &__content {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      &>*:not(:last-child) {
+         @include adaptiveValue("margin-bottom", 32, 10);
+      }
+   }
+   // .advantages-section-04__title
+   &__title {
+      flex: 1 1 100%;
+      @include adaptiveValue("font-size", 30, 18);
+      font-weight: 700;
+      color: $mainColorTwo;
+   }
+   // .advantages-section-04__text
+   &__text {
+      @include adaptiveValue("font-size", 25, 16, 0, $containerWidth, 767.98);
+   }
+}
+//Section-05========================================================================================================================================================
+.section-05 {
+   // .section-05__container
+   &__container {
+      row-gap: rem(15);
+      column-gap: rem(20);
+      padding-bottom: rem(56);
+      @media (max-width: $mobile){
+         flex-direction: column;
+      }
+   }
+   // .section-05__content
+   &__content {
+      padding-top: rem(50);
+      @media (min-width: $mobile){
+         padding-bottom: rem(50);
+      }
+      flex: 0 1 50%;
+   }
+   // .section-05__block-text
+   &__block-text {
+   }
+   // .section-05__block-text-body
+   &__block-text-body {
+   }
+   // .section-05__sup-title
+   &__sup-title {
+   }
+   // .section-05__title
+   &__title {
+   }
+   // .section-05__text
+   &__text {
+   }
+   // .section-05__images
+   &__images {
+      align-self: stretch;
+      flex: 0 1 50%;
+      display: grid;
+      grid-template-rows: repeat(2, 1fr);
+   }
+   // .section-05__image
+   &__image-ibg {
+      position: relative;
+      @media (max-width: $mobile){
+         padding-bottom: 76.0568%;
+         @include adaptiveValue("margin-left", -240, -15);
+         @include adaptiveValue("margin-right", -240, -15);
+      }
+   }
+}
+//Section-06========================================================================================================================================================
+.section-06 {
+   // .section-05__container
+   &__container {
+      padding-top: rem(50);
+      padding-bottom: rem(116);
+      row-gap: rem(15);
+      column-gap: rem(30);
+      @media (max-width: $tablet){
+         justify-content: center;
+         flex-direction: column;
+      }
+   }
+   // .section-05__content
+   &__content {
+      flex: 0 1 50%;
+      @media (max-width: $tablet){
+         align-self: start;
+      }
+   }
+   // .section-05__block-text
+   &__block-text {
+   }
+   // .section-05__block-text-body
+   &__block-text-body {
+   }
+   // .section-05__sup-title
+   &__sup-title {
+   }
+   // .section-05__title
+   &__title {
+   }
+   // .section-05__advantages
+   &__advantages {
+   }
+}
+.advantages-section-06 {
+   flex: 0 1 50%;
+   display: flex;
+   flex-direction: column;
+   &>*:not(:last-child) {
+      @include adaptiveValue("margin-bottom", 60, 15);
+   }
+   // .advantages-section-05__item
+   &__item {
+      display: flex;
+      row-gap: rem(15);
+      @include adaptiveValue("column-gap", 51, 15);
+      @extend %animateTwo;
+      transform: translate(50px, 0);
+      @media (max-width: $tablet){
+         flex-direction: column;
+      }
+   }
+   // .advantages-section-05__icon-wrraper
+   &__icon-wrraper {
+      padding-top: rem(76);
+      display: flex;
+      gap: rem(15);
+      @media (max-width: $tablet){
+         padding-top: 0;
+         align-items: center;
+      }
+   }
+   // .advantages-section-05__icon
+   &__icon {
+      flex: 0 0 rem(48);
+      width: rem(48);
+      height: rem(48);
+      img {
+         max-width: 100%;
+      }
+   }
+   // .advantages-section-05__icon-value
+   &__icon-value {
+   }
+   // .advantages-section-05__content
+   &__content {
+      display: flex;
+      flex-direction: column;
+      &>*:not(:last-child) {
+         @include adaptiveValue("margin-bottom", 32, 15);
+      }
+   }
+   // .advantages-section-05__title
+   &__title {
+      @include adaptiveValue("font-size", 30, 18);
+      font-weight: 700;
+      color: $mainColorTwo;
+   }
+   // .advantages-section-05__text
+   &__text {
+      @include adaptiveValue("font-size", 25, 16, 0, $containerWidth, 479.98);
+   }
+}
+//Section-07========================================================================================================================================================
+.section-07 {
+   // .section-07__container
+   &__container {
+      padding-bottom: rem(56);
+      row-gap: rem(15);
+      column-gap: rem(20);
+      @media (max-width: $mobile){
+         flex-direction: column;
+      }
+   }
+   // .section-07__advantages
+   &__advantages {
+      @media (min-width: $mobile){
+         padding-bottom: rem(50);
+      }
+      padding-top: rem(50);
+      &>* {
+         transform: translate(-50px, 0);
+      }
+   }
+   // .section-07__image
+   &__image {
+      align-self: stretch;
+      position: relative;
+      flex: 0 1 50%;
+      img {
+         max-width: 100%;
+      }
+      @media (min-width: $mobile){
+         @include adaptiveValue("right", -240, -15);
+         img {
+            position: absolute;width: 100%;height: 100%;top: 0;left: 0;
+            object-fit: cover;
+         }
+      }
+   }
+}
+.advantages-section-06 {
+   // .advantages-section-06__item
+   &__item {
+   }
+   // .advantages-section-06__icon-wrraper
+   &__icon-wrraper {
+   }
+   // .advantages-section-06__icon
+   &__icon {
+   }
+   // .advantages-section-06__icon-value
+   &__icon-value {
+      // .advantages-section-06__icon-value_connection
+      &_connection {
+      }
+      // .advantages-section-06__icon-value_creativity
+      &_creativity {
+      }
+      // .advantages-section-06__icon-value_support
+      &_support {
+      }
+   }
+   // .advantages-section-06__content
+   &__content {
+   }
+   // .advantages-section-06__title
+   &__title {
+   }
+   // .advantages-section-06__text
+   &__text {
+   }
+}
+//Section-08========================================================================================================================================================
+.section-08 {
+   // .section-08__container
+   &__container {
+      row-gap: rem(15);
+      padding-bottom: rem(56);
+      flex-direction: row-reverse;
+      @include adaptiveValue("column-gap", 240, 20, 0, $containerWidth, 767.98);
+      @media (max-width: $mobile){
+         flex-direction: column;
+      }
+   }
+   // .section-08__content
+   &__content {
+      padding-top: rem(50);
+      @media (min-width: $mobile){
+         padding-bottom: rem(50);
+      }
+      flex: 0 1 50%;
+      &>*:not(:last-child) {
+         @include adaptiveValue("margin-bottom", 190, 20);
+      }
+   }
+   // .section-08__block-text
+   &__block-text {
+   }
+   // .section-08__block-text-body
+   &__block-text-body {
+   }
+   // .section-08__sup-title
+   &__sup-title {
+   }
+   // .section-08__title
+   &__title {
+   }
+   // .section-08__layouts
+   &__layouts {
+   }
+   // .section-08__image
+   &__image {
+      align-self: stretch;
+      position: relative;
+      flex: 0 1 50%;
+      img {
+         max-width: 100%;
+      }
+      @media (min-width: $mobile){
+         img {
+            position: absolute;width: 100%;height: 100%;top: 0;left: 0;
+            object-fit: cover;
+         }
+      }
+   }
+}
+.layouts-section-08 {
+   display: flex;
+   flex-wrap: wrap;
+   row-gap: rem(20);
+   @include adaptiveValue("column-gap", 87, 40);
+   // .layouts-section-08__item
+   &__item {
+      &>*:not(:last-child) {
+         @include adaptiveValue("margin-bottom", 16, 5);
+      }
+   }
+   // .layouts-section-08__value
+   &__value {
+      @include adaptiveValue("font-size", 60, 30);
+      font-weight: 700;
+      line-height: math.div(75, 60);
+      color: $mainColorTwo;
+   }
+   // .layouts-section-08__label
+   &__label {
+      @include adaptiveValue("font-size", 25, 16);
+   }
+}
+//Section-09========================================================================================================================================================
+.section-09 {
+   // .section-09__container
+   &__container {
+      row-gap: rem(20);
+      padding-bottom: rem(56);
+      flex-direction: row-reverse;
+      column-gap: rem(30);
+      @media (max-width: $tablet){
+         flex-direction: column;
+         align-items: start;
+      }
+   }
+   // .section-09__content
+   &__content {
+      padding-top: rem(50);
+      @media (min-width: $mobile){
+         padding-bottom: rem(50);
+      }
+      flex: 0 0 33.333%;
+      display: flex;
+      @media (min-width: $tablet){
+         justify-content: center;
+      }
+   }
+   // .section-09__block-text
+   &__block-text {
+      @media (min-width: $tablet){
+         text-align: center;
+         writing-mode: vertical-rl;
+         transform: rotate(-180deg);
+      }
+   }
+   // .section-09__block-text-body
+   &__block-text-body {
+   }
+   // .section-09__sup-title
+   &__sup-title {
+   }
+   // .section-09__title
+   &__title {
+   }
+   // .section-09__templates
+   &__templates {
+      align-self: stretch;
+      flex: 0 1 66.667%;
+      display: grid;
+      grid-template-rows: repeat(2, 1fr);
+      @media (max-width: em(500)){
+         row-gap: rem(25);
+      }
+   }
+}
+.templates-section-09 {
+   // .templates-section-09__item
+   &__item {
+      display: flex;
+      @extend %animate;
+      transform: translate(-50px, 0);
+      &_reverse {
+         flex-direction: row-reverse;
+         text-align: right;
+         transform: translate(50px, 0);
+         .templates-section-09__content {
+            padding-left: rem(20);
+            padding-right: 0;
+            @media (max-width: em(500)){
+               padding-left: 0;
+            }
+         }
+         @media (max-width: em(500)){
+            text-align: left;
+         }
+      }
+      @media (max-width: em(500)){
+         flex-direction: column;
+         row-gap: rem(10);
+      }
+   }
+   // .templates-section-09__content
+   &__content {
+      align-self: center;
+      flex: 0 1 50%;
+      padding: rem(20) rem(20) rem(20) rem(0);
+      &>*:not(:last-child) {
+         @include adaptiveValue("margin-bottom", 32, 10);
+      }
+      @media (max-width: em(500)){
+         padding: 0;
+      }
+   }
+   // .templates-section-09__title
+   &__title {
+      @include adaptiveValue("font-size", 30, 20);
+      font-weight: 700;
+      line-height: math.div(38, 30);
+      color: $mainColorTwo;
+   }
+   // .templates-section-09__text
+   &__text {
+      @include adaptiveValue("font-size", 25, 16);
+   }
+   // .templates-section-09__image
+   &__image-ibg {
+      flex: 0 1 50%;
+      @media (max-width: $tablet){
+         padding-bottom: 50%;
+      }
+   }
+}
+//Section-10========================================================================================================================================================
+.section-10 {
+   // .section-10__container
+   &__container {
+      align-items: start;
+      padding-bottom: rem(56);
+      @media (min-width: $mobile){
+         padding-bottom: rem(50);
+      }
+      @media (max-width: $mobile){
+         padding-top: rem(50);
+      }
+   }
+   // .section-10__items
+   &__items {
+      display: flex;
+      row-gap: rem(20);
+      @media (max-width: $mobile){
+         flex-direction: column;
+      }
+   }
+   // .section-10__item
+   &__item {
+      flex: 0 1 33.333%;
+   }
+}
+.item-section-10 {
+   display: flex;
+   flex-direction: column;
+   row-gap: rem(10);
+   @media (min-width: $mobile){
+      &>*:not(:last-child) {
+         @include adaptiveValue("margin-bottom", 60, 10);
+      }
+   }
+   @media (max-width: $mobile){
+      flex-direction: column-reverse;
+   }
+   // .item-section-10__image
+   &__image-ibg {
+      padding-bottom: 129%;
+   }
+   // .item-section-10__content
+   &__content {
+      height: 100%;
+      @include adaptiveValue("padding-right", 60, 20, 0, $containerWidth, 767.98);
+      display: flex;
+      flex-direction: column;
+      &>*:not(:last-child) {
+         @include adaptiveValue("margin-bottom", 32, 5);
+      }
+      @media (max-width: $mobile){
+         padding-right: rem(0);
+      }
+      @extend %animateTwo;
+      &>* {
+         @extend %animateTwo;
+      }
+   }
+   // .item-section-10__title
+   &__title {
+      flex: 1 1 100%;
+      @include adaptiveValue("font-size", 30, 20);
+      font-weight: 700;
+      line-height: math.div(38, 30);
+      color: $mainColorTwo;
+   }
+   // .item-section-10__text
+   &__text {
+      @include adaptiveValue("font-size", 25, 16);
+   }
+}
+//Section-11========================================================================================================================================================
+.section-11 {
+   // .section-11__container
+   &__container {
+      position: relative;
+      row-gap: rem(15);
+      padding-bottom: rem(56);
+      flex-direction: row-reverse;
+      @include adaptiveValue("column-gap", 240, 20, 0, $containerWidth, 767.98);
+      @media (max-width: $mobile){
+         flex-direction: column;
+      }
+      &::before{
+         content:'';
+         position: absolute;
+         width: 50%;
+         height: 100%;
+         top: 0;
+         @include adaptiveValue("left", -240, -15);
+         background-color: rgba(196, 196, 196, 0.30);
+         z-index: -2;
+      }
+   }
+   // .section-11__projects
+   &__projects {
+      padding-top: rem(50);
+      flex: 0 1 50%;
+      @media (min-width: $mobile){
+         padding-bottom: rem(50);
+      }
+      &>*:not(:last-child) {
+         @include adaptiveValue("margin-bottom", 60, 15);
+      }
+   }
+   // .section-11__item
+   &__item {
+      @extend %animateTwo;
+      transform: translate(50px, 0);
+      &>*:not(:last-child) {
+         @include adaptiveValue("margin-bottom", 32, 10);
+      }
+   }
+   // .section-11__title
+   &__title {
+      @include adaptiveValue("font-size", 30, 18);
+      font-weight: 700;
+      line-height: math.div(38, 30);
+   }
+   // .section-11__text
+   &__text {
+      @include adaptiveValue("font-size", 25, 16, 0, $containerWidth, 767.98);
+   }
+   // .section-11__image
+   &__image {
+      flex: 0 1 50%;
+      img {
+         max-width: 100%;
+      }
+   }
+}
+//Section-12========================================================================================================================================================
+.section-12 {
+   // .section-12__container
+   &__container {
+      padding-bottom: rem(56);
+      @media (max-width: $mobile) {
+         flex-direction: column;
+         padding-right: 0!important;
+         padding-left: 0!important;
+      }
+   }
+   // .section-12__body
+   &__body {
+      width: 100%;
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      @include adaptiveValue("padding-top", 247, 50);
+      @include adaptiveValue("padding-bottom", 247, 50);
+      @include adaptiveValue("padding-left", 240, 15, 0, $containerWidth, 479.98);
+      @include adaptiveValue("padding-right", 240, 15, 0, $containerWidth, 479.98);
+      &::after{
+         content:'';
+         position: absolute;width: 100%;height: 100%;top: 0;left: 0;
+         background-color: rgba(28, 31, 37, 0.50);
+      }
+   }
+   // .section-12__content
+   &__content {
+      width: 100%;
+      flex-grow: 1;
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      row-gap: rem(30);
+      column-gap: rem(20);
+      @media (max-width: $mobile){
+         margin: rem(0) rem(-10);
+         column-gap: rem(0);
+         flex-wrap: wrap;
+      }
+   }
+   // .section-12__item
+   &__item {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      flex: 0 1 33.333%;
+      @media (max-width: $mobile){
+         padding: rem(0) rem(15);
+         flex: 0 1 50%;
+         &:last-child {
+            &:nth-child(odd) {
+               flex: 1 1 100%
+            }
+         }
+      }
+      @media (max-width: $mobileSmall){
+         flex: 1 1 100%
+      }
+   }
+   // .section-12__value
+   &__value {
+      @include adaptiveValue("font-size", 60, 30);
+      font-weight: 700;
+      line-height: math.div(75, 60);
+      color: $whiteColor;
+   }
+   // .section-12__label
+   &__label {
+      @include adaptiveValue("font-size", 25, 18, 0, $containerWidth, 767.98);
+      color: $whiteColor;
+      line-height: math.div(31, 25);
+      @extend %animateTwo;
+      transform: translate(0, 30px);
+   }
+   // .section-12__image
+   &__image {
+      position: absolute;width: 100%;height: 100%;top: 0;left: 0;
+      object-fit: cover;
+   }
+}
+//========================================================================================================================================================
